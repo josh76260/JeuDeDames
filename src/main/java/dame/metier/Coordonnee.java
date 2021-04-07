@@ -1,4 +1,4 @@
-package metier;
+package dame.metier;
 
 public class Coordonnee {
     private int ligne;

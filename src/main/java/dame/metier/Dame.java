@@ -1,4 +1,4 @@
-package metier;
+package dame.metier;
 
 public class Dame extends Pion{
     public Dame(Couleur couleur, int ligne, int colonne) {

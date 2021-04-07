@@ -1,8 +1,8 @@
-package metier;
+package dame.metier;
 
 public enum Couleur {
-    NOIR("Noir"),
-    BLANC("Blanc");
+    NOIR("N"),
+    BLANC("B");
 
     private final String couleur;
 
