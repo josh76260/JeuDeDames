@@ -24,4 +24,14 @@ public class Coordonnee {
     public void setColonne(int colonne) {
         this.colonne = colonne;
     }
+
+    @Override
+    public String toString() {
+        return "ligne=" + ligne +
+                ", colonne=" + colonne;
+    }
+
+    public Coordonnee plus(Coordonnee other) {
+        return new Coordonnee(this.ligne + other.ligne, this.colonne + other.colonne);
+    }
 }

@@ -9,16 +9,15 @@ public class Jeu {
 
     public Jeu() {
         plateauDeJeu = new Pion[10][10];
-        plateauDeJeu = new Pion[10][10];
         for (int j = 0; j < 4; j++) {
             for (int i = 1 - j % 2; i < 10; i += 2) {
-                plateauDeJeu[j][i] = new Pion(Couleur.NOIR, i, j);
+                plateauDeJeu[j][i] = new Pion(Couleur.NOIR, j, i);
             }
         }
 
         for (int j = 6; j < 10; j++) {
             for (int i = 1 - j % 2; i < 10; i += 2) {
-                plateauDeJeu[j][i] = new Pion(Couleur.BLANC, i, j);
+                plateauDeJeu[j][i] = new Pion(Couleur.BLANC, j, i);
             }
         }
         tabJoueurs = new Joueur[2];
@@ -38,5 +37,27 @@ public class Jeu {
 
     public Pion[][] getPlateauDeJeu() {
         return plateauDeJeu;
+    }
+
+    public Joueur getJoueurCourant() {
+        return joueurCourant;
+    }
+
+    public boolean estDansLePlateau(Coordonnee coordonnee) {
+        return coordonnee.getLigne() >= 0 && coordonnee.getLigne() < 10 &&
+                coordonnee.getColonne() >= 0 && coordonnee.getColonne() < 10;
+    }
+
+    public boolean estOccupee(Coordonnee coordonnee) {
+        return plateauDeJeu[coordonnee.getLigne()][coordonnee.getColonne()] != null;
+    }
+
+    public void bougerPion(Pion pion, Deplacement deplacement) {
+        plateauDeJeu[pion.getCoord().getLigne()][pion.getCoord().getColonne()] = null;
+        Coordonnee coord = pion.getCoord().plus(deplacement.getCoord());
+pion.setCoord(coord);
+        System.out.println(coord);
+
+        plateauDeJeu[coord.getLigne()][coord.getColonne()] = pion;
     }
 }
