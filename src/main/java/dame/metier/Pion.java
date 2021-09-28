@@ -1,18 +1,18 @@
 package dame.metier;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Pion {
     private Couleur couleur;
     private Coordonnee coord;
     protected ArrayList<Deplacement> listDeplacement;
 
-    public Pion(Couleur couleur, int ligne, int colonne) {
+    public Pion(Couleur couleur, int ligne, int colonne, List<Deplacement> listDeplacement) {
         this.couleur = couleur;
         this.coord = new Coordonnee(ligne, colonne);
         this.listDeplacement = new ArrayList<>();
-        this.listDeplacement.add(Deplacement.DIAGONAL_AVANT_GAUCHE);
-        this.listDeplacement.add(Deplacement.DIAGONAL_AVANT_DROITE);
+        this.listDeplacement.addAll(listDeplacement);
     }
 
     public Coordonnee getCoord() {
@@ -25,6 +25,10 @@ public class Pion {
 
     public ArrayList<Deplacement> getListDeplacement() {
         return listDeplacement;
+    }
+
+    public void setListDeplacement(ArrayList<Deplacement> listDeplacement) {
+        this.listDeplacement = listDeplacement;
     }
 
     @Override

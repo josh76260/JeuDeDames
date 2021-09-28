@@ -3,7 +3,7 @@ package dame.metier;
 public enum Deplacement {
     DIAGONAL_AVANT_GAUCHE(-1, -1),
     DIAGONAL_AVANT_DROITE(1, -1),
-    DIAGONAL_ARRIERE_GAUCHE(1, -1),
+    DIAGONAL_ARRIERE_GAUCHE(-1, 1),
     DIAGONAL_ARRIERE_DROITE(1, 1),
     AVANT(1, 0),
     ARRIERE(-1, 0),

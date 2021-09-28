@@ -8,6 +8,7 @@ import dame.metier.Pion;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class IhmCUI {
@@ -59,18 +60,28 @@ public class IhmCUI {
         for (Pion pion : pionsJouables) {
             System.out.println((j++) + ". " + (pion.getCoord().getLigne() + 1) + Character.toString('A' + pion.getCoord().getColonne()));
         }
-        System.out.print("Votre choix : ");
-        return pionsJouables.get(new Scanner(System.in).nextInt() - 1);
+        int choix = getChoix(j);
+        return pionsJouables.get(choix - 1);
     }
 
     public Deplacement getDeplacement(Pion pion, Pion[][] plateauDeJeu) {
         System.out.println("Pion : " + (pion.getCoord().getLigne() + 1) + Character.toString('A' + pion.getCoord().getColonne()));
         int i = 1;
-        for (Deplacement deplacement :
-                pion.getListDeplacement()) {
+        List<Deplacement> deplacementsDispo = pion.getListDeplacement().stream().
+                filter(deplacement -> controller.estDansLePlateau(pion.getCoord().plus(deplacement.getCoord()))).toList();
+        for (Deplacement deplacement : deplacementsDispo) {
             System.out.println((i++) + ". " + deplacement);
         }
+        int choix = getChoix(i);
+        return deplacementsDispo.get(choix - 1);
+    }
 
-        return pion.getListDeplacement().get(new Scanner(System.in).nextInt() - 1);
+    private int getChoix(int i) {
+        int choix = 0;
+        while (choix <= 0 || choix > i - 1) {
+            System.out.print("Votre choix (entre 1 et " + (i - 1) + ") : ");
+            choix = new Scanner(System.in).nextInt();
+        }
+        return choix;
     }
 }
