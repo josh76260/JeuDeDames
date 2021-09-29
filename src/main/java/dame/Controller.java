@@ -2,6 +2,7 @@ package dame;
 
 import dame.ihm.cui.IhmCUI;
 import dame.metier.Coordonnee;
+import dame.metier.Deplacement;
 import dame.metier.Jeu;
 import dame.metier.Pion;
 
@@ -18,12 +19,10 @@ public class Controller {
     }
 
     private void jouer() {
-
-
         while (true) {
             ihmCui.afficherPlateau(jeu.getPlateauDeJeu());
             Pion pion = ihmCui.selectPion(jeu.getPlateauDeJeu(), jeu.getJoueurCourant());
-            jeu.bougerPion(pion, ihmCui.getDeplacement(pion, jeu.getPlateauDeJeu()));
+            jeu.bougerPion(pion, ihmCui.getDeplacement(pion));
             //Jeu.bougerPion(ihmCui.getPionABouger(), ihmCui.getCoordToMove());
         }
     }
@@ -38,5 +37,9 @@ public class Controller {
 
     public boolean estOccupee(Coordonnee coordonnee) {
         return jeu.estOccupee(coordonnee);
+    }
+
+    public boolean sautPossible(Coordonnee coord, Deplacement deplacement) {
+        return jeu.sautPossible(coord, deplacement);
     }
 }

@@ -8,12 +8,15 @@ public enum Deplacement {
     AVANT(1, 0),
     ARRIERE(-1, 0),
     DROITE(0, 1),
-    GAUCHE(0, -1);
+    GAUCHE(0, -1),
+    SAUT(0, 0);
 
-    private final Coordonnee coord;
+    private Coordonnee coord;
+    private Deplacement alias;
 
     Deplacement(int x, int y) {
         this.coord = new Coordonnee(y, x);
+        this.alias = this;
     }
 
     public int getX() {
@@ -22,6 +25,14 @@ public enum Deplacement {
 
     public int getY() {
         return coord.getLigne();
+    }
+
+    public void setAlias(Deplacement alias) {
+        this.alias = alias;
+    }
+
+    public Deplacement getAlias() {
+        return alias;
     }
 
     public Coordonnee getCoord() {

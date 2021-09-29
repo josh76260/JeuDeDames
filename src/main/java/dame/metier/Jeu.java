@@ -54,14 +54,31 @@ public class Jeu {
         return plateauDeJeu[coordonnee.getLigne()][coordonnee.getColonne()] != null;
     }
 
-    public void bougerPion(Pion pion, Deplacement deplacement) {
-        System.out.println(deplacement);
-        plateauDeJeu[pion.getCoord().getLigne()][pion.getCoord().getColonne()] = null;
-        Coordonnee coord = pion.getCoord().plus(deplacement.getCoord());
-        pion.setCoord(coord);
+    public boolean sautPossible(Coordonnee depart, Deplacement deplacement) {
+        Coordonnee coordonnee = depart.plus(deplacement.getCoord());
+        if (estDansLePlateau(coordonnee)) {
+            Pion sauteur = plateauDeJeu[depart.getLigne()][depart.getColonne()],
+                    saute = plateauDeJeu[coordonnee.getLigne()][coordonnee.getColonne()];
+            if (estOccupee(coordonnee)) {
+                coordonnee = coordonnee.plus(deplacement.getCoord());
+                if (estDansLePlateau(coordonnee) && saute.getCouleur() != sauteur.getCouleur())
+                    return plateauDeJeu[coordonnee.getLigne()][coordonnee.getColonne()] == null;
+                else return false;
+            } else return false;
+        } else return false;
+    }
 
-        plateauDeJeu[coord.getLigne()][coord.getColonne()] = pion;
+    public void bougerPion(Pion pion, List<Deplacement> deplacements) {
+        for (Deplacement deplacement :
+                deplacements) {
+            plateauDeJeu[pion.getCoord().getLigne()][pion.getCoord().getColonne()] = null;
+            Coordonnee coord = pion.getCoord().plus(deplacement.getCoord());
+            pion.setCoord(coord);
 
-        joueurCourant = tabJoueurs[(Arrays.stream(tabJoueurs).toList().indexOf(joueurCourant)+1)%2];
+            plateauDeJeu[coord.getLigne()][coord.getColonne()] = pion;
+        }
+
+
+        joueurCourant = tabJoueurs[(Arrays.stream(tabJoueurs).toList().indexOf(joueurCourant) + 1) % 2];
     }
 }

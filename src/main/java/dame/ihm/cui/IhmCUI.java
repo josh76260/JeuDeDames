@@ -48,11 +48,15 @@ public class IhmCUI {
                     .filter(p -> p != null && p.getCouleur() == joueur.getCouleur())
                     .filter(
                             pion -> (
-                                    controller.estDansLePlateau(pion.getCoord().plus(deplacement[0].getCoord())) &&
+                                    controller.estDansLePlateau(pion.getCoord().plus(deplacement[0].getCoord())) && (
                                             !controller.estOccupee(pion.getCoord().plus(deplacement[0].getCoord()))
+
+                                    )
                             ) || (
-                                    controller.estDansLePlateau(pion.getCoord().plus(deplacement[1].getCoord())) &&
+                                    controller.estDansLePlateau(pion.getCoord().plus(deplacement[1].getCoord())) && (
                                             !controller.estOccupee(pion.getCoord().plus(deplacement[1].getCoord()))
+                                                    || controller.sautPossible(pion.getCoord(), deplacement[1])
+                                    )
                             )
                     ).toList());
         }
@@ -64,16 +68,29 @@ public class IhmCUI {
         return pionsJouables.get(choix - 1);
     }
 
-    public Deplacement getDeplacement(Pion pion, Pion[][] plateauDeJeu) {
+    public List<Deplacement> getDeplacement(Pion pion) {
         System.out.println("Pion : " + (pion.getCoord().getLigne() + 1) + Character.toString('A' + pion.getCoord().getColonne()));
         int i = 1;
-        List<Deplacement> deplacementsDispo = pion.getListDeplacement().stream().
-                filter(deplacement -> controller.estDansLePlateau(pion.getCoord().plus(deplacement.getCoord()))).toList();
+        ArrayList<Deplacement> deplacementsDispo = new ArrayList<>(pion.getListDeplacement().stream().
+                filter(deplacement -> controller.estDansLePlateau(pion.getCoord().plus(deplacement.getCoord())) &&
+                        !controller.estOccupee(pion.getCoord().plus(deplacement.getCoord())) ||
+                        controller.sautPossible(pion.getCoord(), deplacement)).toList());
+
+        for (Deplacement deplacement : deplacementsDispo) {
+            if (controller.sautPossible(pion.getCoord(), deplacement)) {
+                deplacementsDispo.remove(deplacement);
+
+                Deplacement.SAUT.setAlias(deplacement);
+                deplacementsDispo.add(Deplacement.SAUT);
+            }
+        }
         for (Deplacement deplacement : deplacementsDispo) {
             System.out.println((i++) + ". " + deplacement);
         }
         int choix = getChoix(i);
-        return deplacementsDispo.get(choix - 1);
+        if(deplacementsDispo.get(choix-1 ) == Deplacement.SAUT)
+            return List.of(Deplacement.SAUT.getAlias(), Deplacement.SAUT.getAlias());
+        return List.of(deplacementsDispo.get(choix - 1));
     }
 
     private int getChoix(int i) {
