@@ -1,5 +1,7 @@
 package dame.metier;
 
+import java.util.Objects;
+
 public class Coordonnee {
     private int ligne;
     private int colonne;
@@ -33,5 +35,17 @@ public class Coordonnee {
 
     public Coordonnee plus(Coordonnee other) {
         return new Coordonnee(this.ligne + other.ligne, this.colonne + other.colonne);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Coordonnee that)) return false;
+        return getLigne() == that.getLigne() && getColonne() == that.getColonne();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getLigne(), getColonne());
     }
 }
