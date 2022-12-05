@@ -29,8 +29,7 @@ public class Coordonnee {
 
     @Override
     public String toString() {
-        return "ligne=" + ligne +
-                ", colonne=" + colonne;
+        return "ligne=" + ligne + ", colonne=" + colonne;
     }
 
     public Coordonnee plus(Coordonnee other) {

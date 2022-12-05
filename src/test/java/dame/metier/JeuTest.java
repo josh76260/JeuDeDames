@@ -40,13 +40,13 @@ public class JeuTest {
         Pion[][] nouveau = new Pion[10][10];
         for (int j = 0; j < 4; j++) {
             for (int i = 1 - j % 2; i < 10; i += 2) {
-                nouveau[j][i] = new Pion(Couleur.NOIR, j, i, List.of(Deplacement.DIAGONAL_ARRIERE_DROITE, Deplacement.DIAGONAL_ARRIERE_GAUCHE));
+                nouveau[j][i] = new Pion(Couleur.NOIR, j, i, List.of(Deplacement.DIAGONAL_BAS_DROITE, Deplacement.DIAGONAL_BAS_GAUCHE));
             }
         }
 
         for (int j = 6; j < 10; j++) {
             for (int i = 1 - j % 2; i < 10; i += 2) {
-                nouveau[j][i] = new Pion(Couleur.BLANC, j, i, List.of(Deplacement.DIAGONAL_AVANT_DROITE, Deplacement.DIAGONAL_AVANT_GAUCHE));
+                nouveau[j][i] = new Pion(Couleur.BLANC, j, i, List.of(Deplacement.DIAGONAL_HAUT_DROITE, Deplacement.DIAGONAL_HAUT_GAUCHE));
             }
         }
 
@@ -116,12 +116,13 @@ public class JeuTest {
     public void testSautPossible() {
         Pion pion1 = jeu.getPlateauDeJeu()[6][1];
         Pion pion2 = jeu.getPlateauDeJeu()[3][0];
-        jeu.bougerPion(pion1, Collections.singletonList(Deplacement.DIAGONAL_AVANT_DROITE));
-        jeu.bougerPion(pion2, Collections.singletonList(Deplacement.DIAGONAL_ARRIERE_DROITE));
 
-        assertTrue(jeu.sautPossible(pion1.getCoord(), Deplacement.DIAGONAL_AVANT_GAUCHE));
+        jeu.bougerPion(pion1, Collections.singletonList(Deplacement.DIAGONAL_HAUT_DROITE));
+        jeu.bougerPion(pion2, Collections.singletonList(Deplacement.DIAGONAL_BAS_DROITE));
 
-        assertFalse(jeu.sautPossible(pion1.getCoord(), Deplacement.DIAGONAL_AVANT_DROITE));
+        assertTrue(jeu.sautPossible(pion1.getCoord(), Deplacement.DIAGONAL_HAUT_GAUCHE));
+
+        assertFalse(jeu.sautPossible(pion1.getCoord(), Deplacement.DIAGONAL_HAUT_DROITE));
 
     }
 
@@ -131,12 +132,10 @@ public class JeuTest {
     @Test
     public void testBougerPion() {
         Pion pion = jeu.getPlateauDeJeu()[6][1];
-        jeu.bougerPion(pion, Collections.singletonList(Deplacement.DIAGONAL_AVANT_DROITE));
+        jeu.bougerPion(pion, Collections.singletonList(Deplacement.DIAGONAL_BAS_DROITE));
 
         Coordonnee coordonnee = new Coordonnee(6, 1);
-        coordonnee = coordonnee.plus(Deplacement.DIAGONAL_AVANT_DROITE.getCoord());
+        coordonnee = coordonnee.plus(Deplacement.DIAGONAL_BAS_DROITE.getCoord());
         assertEquals(coordonnee, pion.getCoord());
     }
-
-
 }

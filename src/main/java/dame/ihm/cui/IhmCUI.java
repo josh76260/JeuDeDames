@@ -1,10 +1,7 @@
 package dame.ihm.cui;
 
 import dame.Controller;
-import dame.metier.Couleur;
-import dame.metier.Deplacement;
-import dame.metier.Joueur;
-import dame.metier.Pion;
+import dame.metier.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,7 +9,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class IhmCUI {
-    private Controller controller;
+    private final Controller controller;
 
     public IhmCUI(Controller controller) {
         this.controller = controller;
@@ -40,8 +37,8 @@ public class IhmCUI {
         System.out.println(joueur.getCouleur());
         ArrayList<Pion> pionsJouables = new ArrayList<>();
         Deplacement[] deplacement = joueur.getCouleur() == Couleur.NOIR ?
-                new Deplacement[]{Deplacement.DIAGONAL_ARRIERE_DROITE, Deplacement.DIAGONAL_ARRIERE_GAUCHE} :
-                new Deplacement[]{Deplacement.DIAGONAL_AVANT_DROITE, Deplacement.DIAGONAL_AVANT_GAUCHE};
+                new Deplacement[]{Deplacement.DIAGONAL_BAS_DROITE, Deplacement.DIAGONAL_BAS_GAUCHE} :
+                new Deplacement[]{Deplacement.DIAGONAL_HAUT_DROITE, Deplacement.DIAGONAL_HAUT_GAUCHE};
 
         for (Pion[] ligne : plateauDeJeu) {
             pionsJouables.addAll(Arrays.stream(ligne)

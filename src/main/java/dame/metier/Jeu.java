@@ -13,13 +13,13 @@ public class Jeu {
         plateauDeJeu = new Pion[10][10];
         for (int j = 0; j < 4; j++) {
             for (int i = 1 - j % 2; i < 10; i += 2) {
-                plateauDeJeu[j][i] = new Pion(Couleur.NOIR, j, i, List.of(Deplacement.DIAGONAL_ARRIERE_DROITE, Deplacement.DIAGONAL_ARRIERE_GAUCHE));
+                plateauDeJeu[j][i] = new Pion(Couleur.NOIR, j, i, List.of(Deplacement.DIAGONAL_BAS_DROITE, Deplacement.DIAGONAL_BAS_GAUCHE));
             }
         }
 
         for (int j = 6; j < 10; j++) {
             for (int i = 1 - j % 2; i < 10; i += 2) {
-                plateauDeJeu[j][i] = new Pion(Couleur.BLANC, j, i, List.of(Deplacement.DIAGONAL_AVANT_DROITE, Deplacement.DIAGONAL_AVANT_GAUCHE));
+                plateauDeJeu[j][i] = new Pion(Couleur.BLANC, j, i, List.of(Deplacement.DIAGONAL_HAUT_DROITE, Deplacement.DIAGONAL_HAUT_GAUCHE));
             }
         }
         tabJoueurs = new Joueur[2];
