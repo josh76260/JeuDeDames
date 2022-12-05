@@ -15,8 +15,11 @@ import static org.junit.Assert.assertEquals;
  */
 public class CoordonneeTest {
 
+    Coordonnee coordonnee;
+
     @Before
     public void before() {
+        coordonnee = new Coordonnee(1, 1);
     }
 
     @After
@@ -28,7 +31,6 @@ public class CoordonneeTest {
      */
     @Test
     public void testGetLigne() {
-        Coordonnee coordonnee = new Coordonnee(1, 1);
         assertEquals(coordonnee.getLigne(), 1);
     }
 
@@ -37,7 +39,6 @@ public class CoordonneeTest {
      */
     @Test
     public void testSetLigne() {
-        Coordonnee coordonnee = new Coordonnee(1, 1);
         coordonnee.setLigne(5);
         assertEquals(coordonnee.getLigne(), 5);
     }
@@ -47,7 +48,6 @@ public class CoordonneeTest {
      */
     @Test
     public void testGetColonne() {
-        Coordonnee coordonnee = new Coordonnee(1, 1);
         assertEquals(coordonnee.getColonne(), 1);
     }
 
@@ -56,7 +56,6 @@ public class CoordonneeTest {
      */
     @Test
     public void testSetColonne() {
-        Coordonnee coordonnee = new Coordonnee(1, 1);
         coordonnee.setColonne(5);
         assertEquals(coordonnee.getColonne(), 5);
     }
@@ -66,7 +65,6 @@ public class CoordonneeTest {
      */
     @Test
     public void testToString() {
-        Coordonnee coordonnee = new Coordonnee(1, 1);
         assertEquals(coordonnee.toString(), "ligne=1, colonne=1");
     }
 
@@ -75,7 +73,6 @@ public class CoordonneeTest {
      */
     @Test
     public void testPlus() {
-        Coordonnee coordonnee = new Coordonnee(1, 1);
         coordonnee = coordonnee.plus(Deplacement.BAS.getCoord());
         assertEquals(coordonnee.getLigne(), 2);
 
