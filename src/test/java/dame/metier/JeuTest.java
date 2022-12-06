@@ -91,6 +91,16 @@ public class JeuTest {
         coordonnee.setColonne(5);
 
         assertFalse(jeu.estDansLePlateau(coordonnee));
+
+        coordonnee.setLigne(5);
+        coordonnee.setColonne(-1);
+
+        assertFalse(jeu.estDansLePlateau(coordonnee));
+
+        coordonnee.setLigne(-1);
+        coordonnee.setColonne(5);
+
+        assertFalse(jeu.estDansLePlateau(coordonnee));
     }
 
     /**
@@ -124,6 +134,11 @@ public class JeuTest {
 
         assertFalse(jeu.sautPossible(pion1.getCoord(), Deplacement.DIAGONAL_HAUT_DROITE));
 
+        Pion pion3 = jeu.getPlateauDeJeu()[6][3];
+        assertFalse(jeu.sautPossible(pion3.getCoord(), Deplacement.DIAGONAL_HAUT_GAUCHE));
+
+        pion1.setCoord(new Coordonnee(11, 11));
+        assertFalse(jeu.sautPossible(pion1.getCoord(), Deplacement.DIAGONAL_HAUT_DROITE));
     }
 
     /**

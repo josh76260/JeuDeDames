@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.After;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * Coordonnee Tester.
@@ -89,5 +90,30 @@ public class CoordonneeTest {
         Coordonnee coordonnee2 = new Coordonnee(1, 1);
 
         assertEquals(coordonnee1, coordonnee2);
+
+         coordonnee1 = new Coordonnee(1, 1);
+         coordonnee2 = new Coordonnee(1, 2);
+
+        assertNotEquals(coordonnee1, coordonnee2);
+
+        coordonnee1 = new Coordonnee(2, 2);
+        coordonnee2 = new Coordonnee(1, 2);
+
+        assertNotEquals(coordonnee1, coordonnee2);
+
+        String coord = "";
+
+        assertNotEquals(coordonnee1, coord);
+    }
+
+    /**
+     * Method: hashCode()
+     */
+    @Test
+    public void testHashCode(){
+        Coordonnee coordonnee1 = new Coordonnee(1, 1);
+        Coordonnee coordonnee2 = new Coordonnee(1, 1);
+
+        assertEquals(coordonnee1.hashCode(), coordonnee2.hashCode());
     }
 }

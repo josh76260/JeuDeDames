@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * Pion Tester.
@@ -95,5 +96,32 @@ public class PionTest {
         Pion autre = new Pion(Couleur.BLANC, 1, 1, List.of(Deplacement.BAS, Deplacement.HAUT));
 
         assertEquals(pion, autre);
+
+        assertEquals(pion, pion);
+
+        String p = "";
+        assertNotEquals(pion, p);
+
+        autre = new Pion(Couleur.NOIR, 1, 1, List.of(Deplacement.BAS, Deplacement.HAUT));
+        assertNotEquals(pion, autre);
+
+        autre = new Pion(Couleur.NOIR, 2, 1, List.of(Deplacement.BAS, Deplacement.HAUT));
+        assertNotEquals(pion, autre);
+
+        autre = new Pion(Couleur.NOIR, 1, 2, List.of(Deplacement.BAS, Deplacement.HAUT));
+        assertNotEquals(pion, autre);
+
+        autre = new Pion(Couleur.NOIR, 1, 1, List.of(Deplacement.DROITE, Deplacement.GAUCHE));
+        assertNotEquals(pion, autre);
+    }
+
+    /**
+     * Method: hashCode()
+     */
+    @Test
+    public void testHashCode(){
+        Pion autre = new Pion(Couleur.BLANC, 1, 1, List.of(Deplacement.BAS, Deplacement.HAUT));
+
+        assertEquals(autre.hashCode(), pion.hashCode());
     }
 }
