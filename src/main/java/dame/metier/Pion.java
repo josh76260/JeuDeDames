@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Pion {
+public class Pion implements Cloneable{
     protected ArrayList<Deplacement> listDeplacement;
     private final Couleur couleur;
     private Coordonnee coord;
@@ -51,5 +51,14 @@ public class Pion {
     @Override
     public int hashCode() {
         return Objects.hash(getCouleur(), getCoord(), getListDeplacement());
+    }
+
+    @Override
+    public Pion clone() {
+        try {
+            return (Pion) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

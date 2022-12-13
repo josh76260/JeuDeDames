@@ -54,11 +54,10 @@ public class Jeu {
         return plateauDeJeu[coordonnee.getLigne()][coordonnee.getColonne()] != null;
     }
 
-    public boolean sautPossible(Coordonnee depart, Deplacement deplacement) {
-        Coordonnee coordonnee = depart.plus(deplacement.getCoord());
+    public boolean sautPossible(Pion sauteur, Deplacement deplacement) {
+        Coordonnee coordonnee = sauteur.getCoord().plus(deplacement.getCoord());
         if (estDansLePlateau(coordonnee)) {
-            Pion sauteur = plateauDeJeu[depart.getLigne()][depart.getColonne()],
-                    saute = plateauDeJeu[coordonnee.getLigne()][coordonnee.getColonne()];
+            Pion saute = plateauDeJeu[coordonnee.getLigne()][coordonnee.getColonne()];
             if (estOccupee(coordonnee)) {
                 coordonnee = coordonnee.plus(deplacement.getCoord());
                 if (estDansLePlateau(coordonnee) && saute.getCouleur() != sauteur.getCouleur())

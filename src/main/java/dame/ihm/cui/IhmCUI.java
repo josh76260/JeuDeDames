@@ -3,10 +3,7 @@ package dame.ihm.cui;
 import dame.Controller;
 import dame.metier.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class IhmCUI {
     private final Controller controller;
@@ -44,17 +41,13 @@ public class IhmCUI {
             pionsJouables.addAll(Arrays.stream(ligne)
                     .filter(p -> p != null && p.getCouleur() == joueur.getCouleur())
                     .filter(
-                            pion -> (
-                                    controller.estDansLePlateau(pion.getCoord().plus(deplacement[0].getCoord())) && (
-                                            !controller.estOccupee(pion.getCoord().plus(deplacement[0].getCoord()))
-
-                                    )
-                            ) || (
-                                    controller.estDansLePlateau(pion.getCoord().plus(deplacement[1].getCoord())) && (
-                                            !controller.estOccupee(pion.getCoord().plus(deplacement[1].getCoord()))
-                                                    || controller.sautPossible(pion.getCoord(), deplacement[1])
-                                    )
-                            )
+                            pion -> (controller.estDansLePlateau(pion.getCoord().plus(deplacement[0].getCoord())) &&
+                                    (!controller.estOccupee(pion.getCoord().plus(deplacement[0].getCoord())) ||
+                                            controller.sautPossible(pion, deplacement[0])))
+                                    ||
+                                    (controller.estDansLePlateau(pion.getCoord().plus(deplacement[1].getCoord())) &&
+                                            (!controller.estOccupee(pion.getCoord().plus(deplacement[1].getCoord())) ||
+                                                    controller.sautPossible(pion, deplacement[1])))
                     ).toList());
         }
         int j = 1;
@@ -71,23 +64,37 @@ public class IhmCUI {
         ArrayList<Deplacement> deplacementsDispo = new ArrayList<>(pion.getListDeplacement().stream().
                 filter(deplacement -> controller.estDansLePlateau(pion.getCoord().plus(deplacement.getCoord())) &&
                         !controller.estOccupee(pion.getCoord().plus(deplacement.getCoord())) ||
-                        controller.sautPossible(pion.getCoord(), deplacement)).toList());
+                        controller.sautPossible(pion, deplacement)).toList());
+        System.out.println(deplacementsDispo);
+        if (!deplacementsDispo.isEmpty()) {
+            for (Deplacement deplacement : List.copyOf(deplacementsDispo)) {
+                if (controller.sautPossible(pion, deplacement)) {
+                    deplacementsDispo.remove(deplacement);
 
-        for (Deplacement deplacement : deplacementsDispo) {
-            if (controller.sautPossible(pion.getCoord(), deplacement)) {
-                deplacementsDispo.remove(deplacement);
-
-                Deplacement.SAUT.setAlias(deplacement);
-                deplacementsDispo.add(Deplacement.SAUT);
+                    Deplacement.SAUT.setAlias(deplacement);
+                    deplacementsDispo.add(Deplacement.SAUT);
+                }
             }
+            for (Deplacement deplacement : deplacementsDispo) {
+                System.out.println((i++) + ". " + deplacement);
+            }
+            int choix = getChoix(i);
+            if (deplacementsDispo.get(choix - 1) == Deplacement.SAUT) {
+                List<Deplacement> toReturn = new ArrayList<>(List.of(Deplacement.SAUT.getAlias(), Deplacement.SAUT.getAlias()));
+                Pion temp = pion.clone();
+                Coordonnee depart = pion.getCoord();
+                for (Deplacement deplacement :
+                        toReturn) {
+                    depart = depart.plus(deplacement.getCoord());
+                }
+                temp.setCoord(depart);
+                List<Deplacement> toAdd = getDeplacement(temp.clone());
+                toReturn.addAll(toAdd);
+                return toReturn;
+            }
+            return List.of(deplacementsDispo.get(choix - 1));
         }
-        for (Deplacement deplacement : deplacementsDispo) {
-            System.out.println((i++) + ". " + deplacement);
-        }
-        int choix = getChoix(i);
-        if(deplacementsDispo.get(choix-1 ) == Deplacement.SAUT)
-            return List.of(Deplacement.SAUT.getAlias(), Deplacement.SAUT.getAlias());
-        return List.of(deplacementsDispo.get(choix - 1));
+        else return List.of();
     }
 
     private int getChoix(int i) {

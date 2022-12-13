@@ -39,7 +39,7 @@ public class Controller {
         return jeu.estOccupee(coordonnee);
     }
 
-    public boolean sautPossible(Coordonnee coord, Deplacement deplacement) {
-        return jeu.sautPossible(coord, deplacement);
+    public boolean sautPossible(Pion sauteur, Deplacement deplacement) {
+        return jeu.sautPossible(sauteur, deplacement);
     }
 }

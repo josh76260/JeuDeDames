@@ -130,15 +130,15 @@ public class JeuTest {
         jeu.bougerPion(pion1, Collections.singletonList(Deplacement.DIAGONAL_HAUT_DROITE));
         jeu.bougerPion(pion2, Collections.singletonList(Deplacement.DIAGONAL_BAS_DROITE));
 
-        assertTrue(jeu.sautPossible(pion1.getCoord(), Deplacement.DIAGONAL_HAUT_GAUCHE));
+        assertTrue(jeu.sautPossible(pion1, Deplacement.DIAGONAL_HAUT_GAUCHE));
 
-        assertFalse(jeu.sautPossible(pion1.getCoord(), Deplacement.DIAGONAL_HAUT_DROITE));
+        assertFalse(jeu.sautPossible(pion1, Deplacement.DIAGONAL_HAUT_DROITE));
 
         Pion pion3 = jeu.getPlateauDeJeu()[6][3];
-        assertFalse(jeu.sautPossible(pion3.getCoord(), Deplacement.DIAGONAL_HAUT_GAUCHE));
+        assertFalse(jeu.sautPossible(pion3, Deplacement.DIAGONAL_HAUT_GAUCHE));
 
         pion1.setCoord(new Coordonnee(11, 11));
-        assertFalse(jeu.sautPossible(pion1.getCoord(), Deplacement.DIAGONAL_HAUT_DROITE));
+        assertFalse(jeu.sautPossible(pion1, Deplacement.DIAGONAL_HAUT_DROITE));
     }
 
     /**
