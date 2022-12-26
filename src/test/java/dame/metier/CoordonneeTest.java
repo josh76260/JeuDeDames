@@ -74,10 +74,10 @@ public class CoordonneeTest {
      */
     @Test
     public void testPlus() {
-        coordonnee = coordonnee.plus(Deplacement.BAS.getCoord());
+        coordonnee = coordonnee.plus(Deplacement.DIAGONAL_BAS_DROITE.getCoord());
         assertEquals(coordonnee.getLigne(), 2);
 
-        coordonnee = coordonnee.plus(Deplacement.HAUT.getCoord());
+        coordonnee = coordonnee.plus(Deplacement.DIAGONAL_HAUT_DROITE.getCoord());
         assertEquals(coordonnee.getLigne(), 1);
     }
 

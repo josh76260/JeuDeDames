@@ -29,7 +29,7 @@ public class Coordonnee {
 
     @Override
     public String toString() {
-        return "ligne=" + ligne + ", colonne=" + colonne;
+        return "ligne=" + ligne + ", colonne=" + Character.toString('A' + colonne-1);
     }
 
     public Coordonnee plus(Coordonnee other) {
