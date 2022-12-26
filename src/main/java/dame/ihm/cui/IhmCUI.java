@@ -6,50 +6,63 @@ import dame.metier.*;
 import java.util.*;
 
 public class IhmCUI {
+    public static final int DIMENSION_PLATEAU = 10;
     private final Controller controller;
 
     public IhmCUI(Controller controller) {
         this.controller = controller;
     }
 
-    public void afficherPlateau(Pion[][] plateauDeJeu) {
+    public void afficherPlateau(HashMap<Coordonnee, Pion> plateauDeJeu) {
+        Pion[][] plateau = new Pion[DIMENSION_PLATEAU][DIMENSION_PLATEAU];
+
         System.out.print("   ");
-        for (int i = 0; i < plateauDeJeu.length; i++) {
-            System.out.print("  " + Character.toString('A' + i) + " ");
+        for (int i = 0; i < DIMENSION_PLATEAU; i++) {
+            System.out.print("   " + Character.toString('A' + i) + "   ");
         }
         System.out.println();
+
+        for (int i = 0; i < DIMENSION_PLATEAU; i++) {
+            for (int j = 0; j < DIMENSION_PLATEAU; j++) {
+                plateau[i][j] = plateauDeJeu.get(new Coordonnee(i, j));
+            }
+        }
+
         int i = 1;
-        for (Pion[] ligne : plateauDeJeu) {
-            System.out.print("   " + "+---".repeat(plateauDeJeu.length));
+        for (Pion[] ligne : plateau) {
+            System.out.print("   " + "+------".repeat(DIMENSION_PLATEAU));
             System.out.print("+\n" + String.format("%2d", i) + " ");
-            Arrays.stream(ligne).toList().forEach((p) -> System.out.print(p != null ? "| " + p + " " : "|   "));
+            Arrays.stream(ligne).toList().forEach((p) -> System.out.print(p != null ? "|  " + p + "  " : "|      "));
             System.out.print("|\n");
             i++;
         }
-        System.out.print("   " + "+---".repeat(plateauDeJeu.length));
+        System.out.print("   " + "+------".repeat(DIMENSION_PLATEAU));
         System.out.println("+");
     }
 
-    public Pion selectPion(Pion[][] plateauDeJeu, Joueur joueur) {
+    public Pion selectPion(HashMap<Coordonnee, Pion> plateauDeJeu, Joueur joueur) {
         System.out.println(joueur.getCouleur());
-        ArrayList<Pion> pionsJouables = new ArrayList<>();
-        Deplacement[] deplacement = joueur.getCouleur() == Couleur.NOIR ?
-                new Deplacement[]{Deplacement.DIAGONAL_BAS_DROITE, Deplacement.DIAGONAL_BAS_GAUCHE} :
-                new Deplacement[]{Deplacement.DIAGONAL_HAUT_DROITE, Deplacement.DIAGONAL_HAUT_GAUCHE};
 
-        for (Pion[] ligne : plateauDeJeu) {
-            pionsJouables.addAll(Arrays.stream(ligne)
-                    .filter(p -> p != null && p.getCouleur() == joueur.getCouleur())
-                    .filter(
-                            pion -> (controller.estDansLePlateau(pion.getCoord().plus(deplacement[0].getCoord())) &&
-                                    (!controller.estOccupee(pion.getCoord().plus(deplacement[0].getCoord())) ||
-                                            controller.sautPossible(pion, deplacement[0])))
-                                    ||
-                                    (controller.estDansLePlateau(pion.getCoord().plus(deplacement[1].getCoord())) &&
-                                            (!controller.estOccupee(pion.getCoord().plus(deplacement[1].getCoord())) ||
-                                                    controller.sautPossible(pion, deplacement[1])))
-                    ).toList());
-        }
+        ArrayList<Pion> pions = new ArrayList<>(plateauDeJeu.values().stream()
+                .filter(p -> p != null && p.getCouleur() == joueur.getCouleur())
+                .filter(pion -> !controller.getDeplacementsPossibles(pion).isEmpty()).toList());
+
+        ArrayList<Pion> pionsJouables, temp = new ArrayList<>();
+        if (!pions.stream().filter(pion -> !controller.getDeplacementsPossibles(pion).isEmpty()).toList().isEmpty()) {
+            int coupsMax = -1;
+            for (Pion pion : pions.stream().filter(pion -> !controller.getDeplacementsPossibles(pion).isEmpty()).toList()) {
+                List<Deplacement> list = controller.getDeplacementsPossibles(pion);
+                if (!list.isEmpty()) {
+                    if (list.size() >= coupsMax) {
+                        coupsMax = list.size();
+                        temp.add(pion);
+                    }
+                }
+            }
+            int finalCoupsMax = coupsMax;
+            pionsJouables = new ArrayList<>(temp.stream().filter(pion -> finalCoupsMax <= controller.getDeplacementsPossibles(pion).size()).toList());
+        } else
+            pionsJouables = pions;
         int j = 1;
         for (Pion pion : pionsJouables) {
             System.out.println((j++) + ". " + (pion.getCoord().getLigne() + 1) + Character.toString('A' + pion.getCoord().getColonne()));
@@ -61,14 +74,10 @@ public class IhmCUI {
     public List<Deplacement> getDeplacement(Pion pion) {
         System.out.println("Pion : " + (pion.getCoord().getLigne() + 1) + Character.toString('A' + pion.getCoord().getColonne()));
         int i = 1;
-        ArrayList<Deplacement> deplacementsDispo = new ArrayList<>(pion.getListDeplacement().stream().
-                filter(deplacement -> controller.estDansLePlateau(pion.getCoord().plus(deplacement.getCoord())) &&
-                        !controller.estOccupee(pion.getCoord().plus(deplacement.getCoord())) ||
-                        controller.sautPossible(pion, deplacement)).toList());
-        System.out.println(deplacementsDispo);
+        ArrayList<Deplacement> deplacementsDispo = (ArrayList<Deplacement>) controller.getDeplacementsPossibles(pion);
         if (!deplacementsDispo.isEmpty()) {
             for (Deplacement deplacement : List.copyOf(deplacementsDispo)) {
-                if (controller.sautPossible(pion, deplacement)) {
+                if (!controller.deplacementAvecSaut(pion).isEmpty()) {
                     deplacementsDispo.remove(deplacement);
 
                     Deplacement.SAUT.setAlias(deplacement);
@@ -93,8 +102,7 @@ public class IhmCUI {
                 return toReturn;
             }
             return List.of(deplacementsDispo.get(choix - 1));
-        }
-        else return List.of();
+        } else return List.of();
     }
 
     private int getChoix(int i) {
