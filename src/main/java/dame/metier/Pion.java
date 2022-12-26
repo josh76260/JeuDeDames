@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class Pion implements Cloneable{
     protected ArrayList<Deplacement> listDeplacement;
-    private final Couleur couleur;
+    protected final Couleur couleur;
     private Coordonnee coord;
 
     public Pion(Couleur couleur, int ligne, int colonne, List<Deplacement> listDeplacement) {
@@ -38,7 +38,7 @@ public class Pion implements Cloneable{
 
     @Override
     public String toString() {
-        return couleur.getCouleur();
+        return "P" + couleur.getCouleur();
     }
 
     @Override

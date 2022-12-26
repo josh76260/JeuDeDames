@@ -23,7 +23,7 @@ public class PionTest {
 
     @Before
     public void before() {
-        pion = new Pion(Couleur.BLANC, 1, 1, List.of(Deplacement.BAS, Deplacement.HAUT));
+        pion = new Pion(Couleur.BLANC, 1, 1, List.of(Deplacement.DIAGONAL_HAUT_DROITE, Deplacement.DIAGONAL_HAUT_GAUCHE));
     }
 
     @After
@@ -64,7 +64,7 @@ public class PionTest {
      */
     @Test
     public void testGetListDeplacement() {
-        List<Deplacement> attendu = List.of(Deplacement.BAS, Deplacement.HAUT);
+        List<Deplacement> attendu = List.of(Deplacement.DIAGONAL_HAUT_DROITE, Deplacement.DIAGONAL_HAUT_GAUCHE);
 
         assertEquals(pion.getListDeplacement(), attendu);
     }
@@ -74,10 +74,10 @@ public class PionTest {
      */
     @Test
     public void testSetListDeplacement() {
-        ArrayList<Deplacement> attendu = new ArrayList<>(List.of(Deplacement.DROITE, Deplacement.GAUCHE));
+        ArrayList<Deplacement> attendu = new ArrayList<>(List.of(Deplacement.DIAGONAL_BAS_DROITE, Deplacement.DIAGONAL_BAS_GAUCHE));
         pion.setListDeplacement(attendu);
 
-        assertEquals(pion.getListDeplacement(), attendu);
+        assertEquals(attendu, pion.getListDeplacement());
     }
 
     /**
@@ -85,7 +85,7 @@ public class PionTest {
      */
     @Test
     public void testToString() {
-        assertEquals(pion.toString(), Couleur.BLANC.getCouleur());
+        assertEquals("PB", pion.toString());
     }
 
     /**
@@ -93,7 +93,7 @@ public class PionTest {
      */
     @Test
     public void testEquals() {
-        Pion autre = new Pion(Couleur.BLANC, 1, 1, List.of(Deplacement.BAS, Deplacement.HAUT));
+        Pion autre = new Pion(Couleur.BLANC, 1, 1, List.of(Deplacement.DIAGONAL_HAUT_DROITE, Deplacement.DIAGONAL_HAUT_GAUCHE));
 
         assertEquals(pion, autre);
 
@@ -102,16 +102,16 @@ public class PionTest {
         String p = "";
         assertNotEquals(pion, p);
 
-        autre = new Pion(Couleur.NOIR, 1, 1, List.of(Deplacement.BAS, Deplacement.HAUT));
+        autre = new Pion(Couleur.NOIR, 1, 1, List.of(Deplacement.DIAGONAL_BAS_DROITE, Deplacement.DIAGONAL_BAS_GAUCHE));
         assertNotEquals(pion, autre);
 
-        autre = new Pion(Couleur.NOIR, 2, 1, List.of(Deplacement.BAS, Deplacement.HAUT));
+        autre = new Pion(Couleur.NOIR, 2, 1, List.of(Deplacement.DIAGONAL_BAS_DROITE, Deplacement.DIAGONAL_BAS_GAUCHE));
         assertNotEquals(pion, autre);
 
-        autre = new Pion(Couleur.NOIR, 1, 2, List.of(Deplacement.BAS, Deplacement.HAUT));
+        autre = new Pion(Couleur.NOIR, 1, 2, List.of(Deplacement.DIAGONAL_BAS_DROITE, Deplacement.DIAGONAL_BAS_GAUCHE));
         assertNotEquals(pion, autre);
 
-        autre = new Pion(Couleur.NOIR, 1, 1, List.of(Deplacement.DROITE, Deplacement.GAUCHE));
+        autre = new Pion(Couleur.NOIR, 1, 1, List.of(Deplacement.DIAGONAL_HAUT_DROITE, Deplacement.DIAGONAL_HAUT_GAUCHE));
         assertNotEquals(pion, autre);
     }
 
@@ -120,7 +120,7 @@ public class PionTest {
      */
     @Test
     public void testHashCode(){
-        Pion autre = new Pion(Couleur.BLANC, 1, 1, List.of(Deplacement.BAS, Deplacement.HAUT));
+        Pion autre = new Pion(Couleur.BLANC, 1, 1, List.of(Deplacement.DIAGONAL_HAUT_DROITE, Deplacement.DIAGONAL_HAUT_GAUCHE));
 
         assertEquals(autre.hashCode(), pion.hashCode());
     }
