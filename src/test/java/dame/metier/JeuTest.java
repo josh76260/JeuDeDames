@@ -4,9 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -35,22 +33,24 @@ public class JeuTest {
      */
     @Test
     public void testGetPlateauDeJeu() {
-        Pion[][] plateau = jeu.getPlateauDeJeu();
+        HashMap<Coordonnee, Pion> plateau = jeu.getPlateauDeJeu();
 
-        Pion[][] nouveau = new Pion[10][10];
+        HashMap<Coordonnee, Pion> nouveau = new HashMap<>();
         for (int j = 0; j < 4; j++) {
             for (int i = 1 - j % 2; i < 10; i += 2) {
-                nouveau[j][i] = new Pion(Couleur.NOIR, j, i, List.of(Deplacement.DIAGONAL_BAS_DROITE, Deplacement.DIAGONAL_BAS_GAUCHE));
+                nouveau.put(new Coordonnee(j, i), new Pion(Couleur.NOIR, j, i,
+                        List.of(Deplacement.DIAGONAL_BAS_DROITE, Deplacement.DIAGONAL_BAS_GAUCHE)));
             }
         }
 
         for (int j = 6; j < 10; j++) {
             for (int i = 1 - j % 2; i < 10; i += 2) {
-                nouveau[j][i] = new Pion(Couleur.BLANC, j, i, List.of(Deplacement.DIAGONAL_HAUT_DROITE, Deplacement.DIAGONAL_HAUT_GAUCHE));
+                nouveau.put(new Coordonnee(j, i), new Pion(Couleur.BLANC, j, i,
+                        List.of(Deplacement.DIAGONAL_HAUT_DROITE, Deplacement.DIAGONAL_HAUT_GAUCHE)));
             }
         }
 
-        assertTrue(Arrays.deepEquals(plateau, nouveau));
+        assertEquals(plateau.hashCode(), nouveau.hashCode());
     }
 
     /**
@@ -124,21 +124,21 @@ public class JeuTest {
      */
     @Test
     public void testSautPossible() {
-        Pion pion1 = jeu.getPlateauDeJeu()[6][1];
-        Pion pion2 = jeu.getPlateauDeJeu()[3][0];
+        Pion pion1 = jeu.getPlateauDeJeu().get(new Coordonnee(6,1));
+        Pion pion2 = jeu.getPlateauDeJeu().get(new Coordonnee(3,0));
 
         jeu.bougerPion(pion1, Collections.singletonList(Deplacement.DIAGONAL_HAUT_DROITE));
         jeu.bougerPion(pion2, Collections.singletonList(Deplacement.DIAGONAL_BAS_DROITE));
 
-        assertTrue(jeu.sautPossible(pion1, Deplacement.DIAGONAL_HAUT_GAUCHE));
+        assertFalse(jeu.deplacementAvecSaut(pion1).isEmpty());
 
-        assertFalse(jeu.sautPossible(pion1, Deplacement.DIAGONAL_HAUT_DROITE));
+        assertFalse(jeu.deplacementAvecSaut(pion2).isEmpty());
 
-        Pion pion3 = jeu.getPlateauDeJeu()[6][3];
-        assertFalse(jeu.sautPossible(pion3, Deplacement.DIAGONAL_HAUT_GAUCHE));
+        Pion pion3 = jeu.getPlateauDeJeu().get(new Coordonnee(6,3));
+        assertTrue(jeu.deplacementAvecSaut(pion3).isEmpty());
 
         pion1.setCoord(new Coordonnee(11, 11));
-        assertFalse(jeu.sautPossible(pion1, Deplacement.DIAGONAL_HAUT_DROITE));
+        assertTrue(jeu.deplacementAvecSaut(pion1).isEmpty());
     }
 
     /**
@@ -146,7 +146,7 @@ public class JeuTest {
      */
     @Test
     public void testBougerPion() {
-        Pion pion = jeu.getPlateauDeJeu()[6][1];
+        Pion pion = jeu.getPlateauDeJeu().get(new Coordonnee(6,1));
         jeu.bougerPion(pion, Collections.singletonList(Deplacement.DIAGONAL_BAS_DROITE));
 
         Coordonnee coordonnee = new Coordonnee(6, 1);
