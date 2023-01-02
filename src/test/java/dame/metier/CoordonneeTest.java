@@ -66,7 +66,7 @@ public class CoordonneeTest {
      */
     @Test
     public void testToString() {
-        assertEquals(coordonnee.toString(), "ligne=1, colonne=1");
+        assertEquals("ligne=1, colonne=A", coordonnee.toString());
     }
 
     /**

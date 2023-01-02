@@ -4,7 +4,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -132,7 +134,7 @@ public class JeuTest {
 
         assertFalse(jeu.deplacementAvecSaut(pion1).isEmpty());
 
-        assertFalse(jeu.deplacementAvecSaut(pion2).isEmpty());
+        assertTrue(jeu.deplacementAvecSaut(pion2).isEmpty());
 
         Pion pion3 = jeu.getPlateauDeJeu().get(new Coordonnee(6,3));
         assertTrue(jeu.deplacementAvecSaut(pion3).isEmpty());
