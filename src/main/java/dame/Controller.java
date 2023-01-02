@@ -34,11 +34,11 @@ public class Controller {
     }
 
     private void jouer() {
-        while (true) {
+        while (!jeu.finDuJeu()) {
             ihmCui.afficherPlateau(jeu.getPlateauDeJeu());
             Pion pion = ihmCui.selectPion(jeu.getPlateauDeJeu(), jeu.getJoueurCourant());
             jeu.bougerPion(pion, ihmCui.getDeplacement(pion));
-            //Jeu.bougerPion(ihmCui.getPionABouger(), ihmCui.getCoordToMove());
+
         }
     }
 
@@ -66,5 +66,9 @@ public class Controller {
 
     public int getMaxSauts(Pion pion) {
         return jeu.getMaxSauts(pion);
+    }
+
+    public void setSaute(Coordonnee coordonnee) {
+        jeu.setSaute(coordonnee);
     }
 }
