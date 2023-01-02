@@ -4,16 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Pion implements Cloneable{
-    protected ArrayList<Deplacement> listDeplacement;
+public class Pion implements Cloneable {
     protected final Couleur couleur;
+    protected ArrayList<Deplacement> listDeplacement;
     private Coordonnee coord;
+    private boolean estSaute;
 
     public Pion(Couleur couleur, int ligne, int colonne, List<Deplacement> listDeplacement) {
         this.couleur = couleur;
         this.coord = new Coordonnee(ligne, colonne);
         this.listDeplacement = new ArrayList<>();
         this.listDeplacement.addAll(listDeplacement);
+        this.estSaute = false;
     }
 
     public Coordonnee getCoord() {
@@ -34,6 +36,14 @@ public class Pion implements Cloneable{
 
     public void setListDeplacement(ArrayList<Deplacement> listDeplacement) {
         this.listDeplacement = listDeplacement;
+    }
+
+    public boolean isEstSaute() {
+        return estSaute;
+    }
+
+    public void setEstSaute(boolean estSaute) {
+        this.estSaute = estSaute;
     }
 
     @Override

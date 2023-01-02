@@ -6,8 +6,10 @@ import java.net.URISyntaxException;
 import java.util.*;
 
 public class Jeu {
+
+    public static final int MIN_PLATEAU = 0, MAX_PLATEAU = 10;
     private HashMap<Coordonnee, Pion> plateauDeJeu;
-    private Joueur[] tabJoueurs;
+    private final Joueur[] tabJoueurs;
     private Joueur joueurCourant;
 
     public Jeu() {
@@ -87,17 +89,13 @@ public class Jeu {
         return new HashMap<>(plateauDeJeu);
     }
 
-    public void setPlateauDeJeu(HashMap<Coordonnee, Pion> plateauDeJeu) {
-        this.plateauDeJeu = new HashMap<>(plateauDeJeu);
-    }
-
     public Joueur getJoueurCourant() {
         return joueurCourant;
     }
 
     public boolean estDansLePlateau(Coordonnee coordonnee) {
-        return coordonnee.getLigne() >= 0 && coordonnee.getLigne() < 10 &&
-                coordonnee.getColonne() >= 0 && coordonnee.getColonne() < 10;
+        return coordonnee.getLigne() >= MIN_PLATEAU && coordonnee.getLigne() < MAX_PLATEAU &&
+                coordonnee.getColonne() >= MIN_PLATEAU && coordonnee.getColonne() < MAX_PLATEAU;
     }
 
     public boolean estOccupee(Coordonnee coordonnee) {
@@ -126,6 +124,7 @@ public class Jeu {
                     Pion saute = plateauDeJeu.get(coordonnee);
                     coordonnee = coordonnee.plus(deplacement.getCoord());
                     if (estDansLePlateau(coordonnee) && !estOccupee(coordonnee) && saute.getCouleur() != sauteur.getCouleur()) {
+                        deplacement.setAlias(Deplacement.SAUT);
                         deplacementsAvecSaut.add(deplacement);
                     }
                 }
@@ -144,14 +143,29 @@ public class Jeu {
 //        } else return false;
     }
 
+    /**
+     * Fonction qui permet de calculer le nombre max de sauts pour un pion donné
+     *
+     * @param pion le pion pour lequel on veut savoir le nombre de sauts possible
+     * @return le nombre de sauts possible avec le pion
+     */
     public int getMaxSauts(Pion pion) {
+        var original = getPlateauDeJeu();
+        var joueurCourant = getJoueurCourant();
+        int toReturn = maxSauts(pion) - 1;
+        plateauDeJeu = original;
+        this.joueurCourant = joueurCourant;
+        return toReturn;
+    }
+
+    private int maxSauts(Pion pion) {
         var deplacementAvecSauts = deplacementAvecSaut(pion);
         if (deplacementAvecSauts.isEmpty()) {
             return 1;
         } else {
             Pion temp = pion.clone();
             bougerPion(temp, List.of(deplacementAvecSauts.get(0), deplacementAvecSauts.get(0)));
-            return 1 + getMaxSauts(temp);
+            return 1 + maxSauts(temp);
         }
     }
 
@@ -162,8 +176,21 @@ public class Jeu {
         for (Deplacement deplacement :
                 deplacementPossibles) {
             Coordonnee temp = coordonnee.plus(deplacement.getCoord());
-            if (estDansLePlateau(temp) && !estOccupee(temp.plus(deplacement.getCoord()))) {
+            if (estDansLePlateau(temp) && !estOccupee(temp) ||
+                    (!deplacementPossibles.stream().filter(d -> d.getAlias() == Deplacement.SAUT).toList().isEmpty()
+                            && estDansLePlateau(temp)
+                            && !estOccupee(temp.plus(deplacement.getCoord()))
+                            && !estSaute(temp))) {
                 listReturn.add(deplacement);
+            }
+        }
+
+        for (Deplacement deplacement : List.copyOf(listReturn)) {
+            if (!deplacementAvecSaut(pion).isEmpty()) {
+                listReturn.remove(deplacement);
+
+                Deplacement.SAUT.setAlias(deplacement);
+                listReturn.add(Deplacement.SAUT);
             }
         }
         return listReturn;
@@ -190,5 +217,17 @@ public class Jeu {
             plateauDeJeu.replace(coordonnee, pion);
         }
         joueurCourant = tabJoueurs[(Arrays.stream(tabJoueurs).toList().indexOf(joueurCourant) + 1) % 2];
+    }
+
+    public void setSaute(Coordonnee coordonnee) {
+        plateauDeJeu.get(coordonnee).setEstSaute(true);
+    }
+
+    public boolean estSaute(Coordonnee coordonnee) {
+        return estOccupee(coordonnee) && plateauDeJeu.get(coordonnee).isEstSaute();
+    }
+
+    public boolean finDuJeu() {
+        return false;
     }
 }
