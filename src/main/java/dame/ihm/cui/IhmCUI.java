@@ -48,19 +48,17 @@ public class IhmCUI {
                 .filter(pion -> !controller.getDeplacementsPossibles(pion).isEmpty()).toList());
 
         ArrayList<Pion> pionsJouables, temp = new ArrayList<>();
-        if (!pions.stream().filter(pion -> !controller.getDeplacementsPossibles(pion).isEmpty()).toList().isEmpty()) {
+        if (!pions.stream().filter(pion -> !controller.deplacementAvecSaut(pion).isEmpty()).toList().isEmpty()) {
             int coupsMax = -1;
-            for (Pion pion : pions.stream().filter(pion -> !controller.getDeplacementsPossibles(pion).isEmpty()).toList()) {
-                List<Deplacement> list = controller.getDeplacementsPossibles(pion);
-                if (!list.isEmpty()) {
-                    if (list.size() >= coupsMax) {
-                        coupsMax = list.size();
-                        temp.add(pion);
-                    }
+            for (Pion pion : pions.stream().filter(pion -> !controller.deplacementAvecSaut(pion).isEmpty()).toList()) {
+                var coups = controller.getMaxSauts(pion);
+                if (coups >= coupsMax) {
+                    coupsMax = coups;
+                    temp.add(pion);
                 }
             }
             int finalCoupsMax = coupsMax;
-            pionsJouables = new ArrayList<>(temp.stream().filter(pion -> finalCoupsMax <= controller.getDeplacementsPossibles(pion).size()).toList());
+            pionsJouables = new ArrayList<>(temp.stream().filter(pion -> finalCoupsMax <= controller.getMaxSauts(pion)).toList());
         } else
             pionsJouables = pions;
         int j = 1;
@@ -73,36 +71,36 @@ public class IhmCUI {
 
     public List<Deplacement> getDeplacement(Pion pion) {
         System.out.println("Pion : " + (pion.getCoord().getLigne() + 1) + Character.toString('A' + pion.getCoord().getColonne()));
-        int i = 1;
-        ArrayList<Deplacement> deplacementsDispo = (ArrayList<Deplacement>) controller.getDeplacementsPossibles(pion);
-        if (!deplacementsDispo.isEmpty()) {
-            for (Deplacement deplacement : List.copyOf(deplacementsDispo)) {
-                if (!controller.deplacementAvecSaut(pion).isEmpty()) {
-                    deplacementsDispo.remove(deplacement);
-
-                    Deplacement.SAUT.setAlias(deplacement);
-                    deplacementsDispo.add(Deplacement.SAUT);
+        ArrayList<Deplacement> toReturn = new ArrayList<>(), deplacementsDispo = (ArrayList<Deplacement>) controller.getDeplacementsPossibles(pion);
+        Deplacement deplacementChoisi = null;
+        int choix;
+        do {
+            int i = 1;
+            if (!deplacementsDispo.isEmpty()) {
+                for (Deplacement deplacement : deplacementsDispo) {
+                    System.out.println((i++) + ". " + deplacement);
                 }
+                choix = getChoix(i);
+                deplacementChoisi = deplacementsDispo.get(choix - 1);
+                if (deplacementChoisi == Deplacement.SAUT) {
+                    List<Deplacement> deplacementAFaire = new ArrayList<>(List.of(Deplacement.SAUT.getAlias(), Deplacement.SAUT.getAlias()));
+                    Pion temp = pion.clone();
+                    Coordonnee depart = pion.getCoord();
+                    for (Deplacement depl :
+                            deplacementAFaire) {
+                        depart = depart.plus(depl.getCoord());
+                        if (controller.estOccupee(depart))
+                            controller.setSaute(depart);
+                    }
+                    temp.setCoord(depart);
+                    toReturn.addAll(deplacementAFaire);
+                    pion = temp.clone();
+                } else
+                    toReturn.add(deplacementChoisi);
             }
-            for (Deplacement deplacement : deplacementsDispo) {
-                System.out.println((i++) + ". " + deplacement);
-            }
-            int choix = getChoix(i);
-            if (deplacementsDispo.get(choix - 1) == Deplacement.SAUT) {
-                List<Deplacement> toReturn = new ArrayList<>(List.of(Deplacement.SAUT.getAlias(), Deplacement.SAUT.getAlias()));
-                Pion temp = pion.clone();
-                Coordonnee depart = pion.getCoord();
-                for (Deplacement deplacement :
-                        toReturn) {
-                    depart = depart.plus(deplacement.getCoord());
-                }
-                temp.setCoord(depart);
-                List<Deplacement> toAdd = getDeplacement(temp.clone());
-                toReturn.addAll(toAdd);
-                return toReturn;
-            }
-            return List.of(deplacementsDispo.get(choix - 1));
-        } else return List.of();
+            deplacementsDispo = (ArrayList<Deplacement>) controller.getDeplacementsPossibles(pion);
+        } while (!deplacementsDispo.isEmpty() && deplacementChoisi == Deplacement.SAUT && deplacementsDispo.contains(Deplacement.SAUT));
+        return toReturn;
     }
 
     private int getChoix(int i) {
